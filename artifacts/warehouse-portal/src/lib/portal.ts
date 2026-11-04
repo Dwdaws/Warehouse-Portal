@@ -26,7 +26,9 @@ export const AREA_STYLE: Record<string, { hue: string; code: string; note: strin
 export const areaColor = (area: string, alpha = 1) =>
   `hsl(${AREA_STYLE[area]?.hue ?? "216 20% 40%"} / ${alpha})`;
 
-export const isManager = (u?: User | null) => u?.role === "Manager";
+/** Shared management-tool access; content editing still requires isEditor. */
+export const isManager = (u?: User | null) => u?.role === "Manager" || u?.jobLevel === "Supervisor";
+export const audienceLabel = (audience: Resource["audience"]) => audience === "Managers" ? "Supervisors & managers" : audience;
 export const isEditor = (u?: User | null) => !!u && u.role === "Manager" && u.editor;
 export const areasForUser = (u?: User | null) => isManager(u) ? ALL_AREAS : AREAS;
 

@@ -11,7 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { useSessionUser } from "@/components/shell";
 import { AreaTag, EmptyPanel, ErrorPanel, ListSkeleton, PageHead, Restricted, StaleFlag } from "@/components/portal-ui";
-import { ALL_AREAS, CONTENT_GROUPS, MANAGER_AREAS, KIND_LABEL, contentGroups, groupName, fmtDate, isEditor, isStale, matches } from "@/lib/portal";
+import { ALL_AREAS, CONTENT_GROUPS, MANAGER_AREAS, KIND_LABEL, audienceLabel, contentGroups, groupName, fmtDate, isEditor, isStale, matches } from "@/lib/portal";
 import { GroupFilter } from "@/components/group-filter";
 import { SearchBox } from "@/pages/sops";
 
@@ -119,7 +119,7 @@ function Editor({ initial, onDone, groups }: { initial: ResourceInput; onDone: (
         </Field>
         <Field label="Audience">
           <select className={inputCls} value={(MANAGER_AREAS as readonly string[]).includes(f.area) ? "Managers" : f.audience} disabled={f.kind === "toolkit" || (MANAGER_AREAS as readonly string[]).includes(f.area)} onChange={(e) => set("audience", e.target.value as ResourceInput["audience"])} data-testid="select-audience">
-            <option>Both</option><option>Employees</option><option>Managers</option>
+            <option>Both</option><option>Employees</option><option value="Managers">Supervisors &amp; managers</option>
           </select>
         </Field>
       </div>
@@ -236,7 +236,7 @@ export default function AdminPage() {
                   <span className="font-mono uppercase">{KIND_LABEL[r.kind]}</span>
                   <AreaTag area={r.area} />
                   {r.contentGroup && <span>{r.contentGroup}</span>}
-                  <span className="font-mono">{r.audience}</span>
+                  <span className="font-mono">{audienceLabel(r.audience)}</span>
                   {r.kind === "sop" && <span>Reviewed {fmtDate(r.lastReviewed)}</span>}
                   {isStale(r) && <StaleFlag />}
                   {r.kind === "learning" && !r.shareUrl && <span className="text-destructive">Needs MeetQuinn link</span>}

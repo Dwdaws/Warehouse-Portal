@@ -30,7 +30,7 @@ export default function RegisterDevicePage() {
   const emps = useListEmployees({ query: { enabled: mgr, queryKey: getListEmployeesQueryKey(), refetchOnMount: true } });
   const reg = useRegisterDevice();
 
-  if (!mgr) return <Restricted need="manager" />;
+  if (!mgr) return <Restricted need="supervisor or manager" />;
 
   function generate() {
     const data = mode === "existing" ? { employeeUserId: selected, jobLevel } : { ...form, jobLevel };
@@ -66,7 +66,7 @@ export default function RegisterDevicePage() {
 
   return (
     <div className="mx-auto max-w-xl">
-      <PageHead kicker="Managers" title="Register a Device">Get an employee's phone onto the portal in under a minute.</PageHead>
+      <PageHead kicker="Supervisors & managers" title="Register a Device">Get an employee's phone onto the portal in under a minute.</PageHead>
       <div className="mb-4 grid grid-cols-2 gap-1 rounded-md bg-muted p-1">
         {(["existing", "new"] as const).map((m) => (
           <button key={m} onClick={() => { setMode(m); setSelected(""); setJobLevel("Frontline Employee"); }} className={`rounded px-3 py-2 text-xs font-semibold uppercase tracking-wider ${mode === m ? "bg-card shadow-sm" : "text-muted-foreground"}`} data-testid={`tab-${m}`}>{m === "existing" ? "Existing employee" : "Add new"}</button>

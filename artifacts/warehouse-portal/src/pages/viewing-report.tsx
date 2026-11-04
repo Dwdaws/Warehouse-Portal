@@ -28,7 +28,7 @@ export default function ViewingReportPage() {
       placeholderData: (prev) => prev,
     },
   });
-  if (!isManager(user)) return <Restricted need="manager" />;
+  if (!isManager(user)) return <Restricted need="supervisor or manager" />;
 
   const data = q.data;
   const people = data?.people ?? [];
@@ -38,7 +38,7 @@ export default function ViewingReportPage() {
 
   return (
     <div>
-      <PageHead kicker="Managers only" title="Viewing Report">Who opened which e-learning page, from which registered browser, and how often.</PageHead>
+      <PageHead kicker="Supervisors & managers" title="Viewing Report">Who opened which e-learning page, from which registered browser, and how often.</PageHead>
 
       <div className="mb-5 flex gap-3 rounded-lg border border-accent/60 bg-accent/10 p-3 text-sm" data-testid="text-report-disclaimer">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />

@@ -3,7 +3,7 @@ import { ArrowLeft, Clock, ExternalLink, Pencil, Users } from "lucide-react";
 import { useListResources, getListResourcesQueryKey } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { AreaTag, EmptyPanel, ErrorPanel, ListSkeleton } from "@/components/portal-ui";
-import { canSee, isEditor } from "@/lib/portal";
+import { audienceLabel, canSee, isEditor } from "@/lib/portal";
 import { ViewRecorder } from "@/components/view-recorder";
 
 export default function LearningDetailPage() {
@@ -14,7 +14,7 @@ export default function LearningDetailPage() {
 
   if (list.isLoading) return <ListSkeleton rows={3} />;
   if (list.isError) return <ErrorPanel onRetry={() => list.refetch()} />;
-  if (!r || !canSee(r, user)) return <EmptyPanel title="Module not found">It may be archived or limited to managers. <Link href="/learnings" className="underline">Back</Link></EmptyPanel>;
+  if (!r || !canSee(r, user)) return <EmptyPanel title="Module not found">It may be archived or limited to supervisors and managers. <Link href="/learnings" className="underline">Back</Link></EmptyPanel>;
 
   const link = r.shareUrl?.startsWith("https://") ? r.shareUrl : "";
 
@@ -29,7 +29,7 @@ export default function LearningDetailPage() {
           <h1 className="mt-2 font-display text-3xl font-bold uppercase leading-none md:text-4xl" data-testid="text-learning-title">{r.title}</h1>
           <div className="mt-2 flex gap-4 font-mono text-xs text-muted-foreground">
             {r.minutes ? <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{r.minutes} min</span> : null}
-            <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5" />{r.audience}</span>
+            <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5" />{audienceLabel(r.audience)}</span>
           </div>
         </div>
         <div className="flex gap-2">

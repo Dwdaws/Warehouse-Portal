@@ -30,9 +30,9 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 ## Product
 
-An internal hub that complements, rather than replaces, the existing LMS. Employees access SOPs and e-learning; managers additionally access blank document templates and employee device registration. Content-editor managers manage shared resources.
+An internal hub that complements, rather than replaces, the existing LMS. Frontline employees and leads access SOPs and e-learning; supervisors and managers additionally access blank document templates, device registration, and viewing reports. Only designated content-editor managers manage shared resources.
 
-E-learning viewing records identify the signed-in person and browser, with first/last open times and repeat-open counts. Managers access the Viewing Report through Manager Toolkit.
+E-learning viewing records identify the signed-in person and browser, with first/last open times and repeat-open counts. Supervisors and managers access the Viewing Report through Manager Toolkit.
 
 ## User preferences
 
@@ -47,7 +47,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 - Employees should be able to read Word reference documents directly in the app rather than being required to download them. The user is also willing to supply PDFs when exact document layout matters.
 - Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
 - Archived resources are hidden, never deleted.
-- Managers need additional areas such as Talent Management. Talent Management resources are manager-only.
+- Supervisors and managers need additional areas such as Talent Management. Frontline employees and leads do not have access to Talent Management or other management-only content.
 - Content groups classify resources by substance separately from area and audience: Inbound, Putaway and Storage, Orders and Transfers, Distribution Outbound, Inventory Accuracy, and System How-Tos and References. Editors may also enter additional group names.
 - Viewing records count e-learning page opens, not viewing progress, attention, or completion. The existing LMS remains the completion source of truth.
 - The user expects MeetQuinn to email them when an employee finishes a module; the portal's page-open report is sufficient alongside those completion notifications. Email delivery has not been verified here.

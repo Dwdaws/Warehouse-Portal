@@ -38,7 +38,7 @@ export default function ToolkitPage() {
   const list = useListResources({ query: { queryKey: getListResourcesQueryKey(), refetchOnMount: true } });
   const items = useMemo(() => visibleResources(list.data, user).filter((r) => r.kind === "toolkit"), [list.data, user]);
   const filtered = items.filter(r => (group === "All" || groupName(r) === group) && (area === "All" || r.area === area));
-  if (!isManager(user)) return <Restricted need="manager" />;
+  if (!isManager(user)) return <Restricted need="supervisor or manager" />;
   const isAssess = (r: Resource) => /assess|30-60-90/i.test(`${r.category} ${r.title}`);
   const groups = [
     { title: "Meeting Templates", sub: "1-on-1 and team meetings · Word", items: filtered.filter((r) => !isAssess(r)) },
@@ -46,7 +46,7 @@ export default function ToolkitPage() {
   ];
   return (
     <div>
-      <PageHead kicker="Managers only" title="Manager Toolkit">Blank master copies. Save completed files on your own computer; the portal only keeps the current template.</PageHead>
+      <PageHead kicker="Supervisors & managers" title="Manager Toolkit">Blank master copies. Save completed files on your own computer; the portal only keeps the current template.</PageHead>
       <Link href="/viewing-report" className="mb-5 flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:bg-secondary" data-testid="link-viewing-report">
         <BarChart3 className="h-5 w-5" />
         <div><div className="font-semibold">E-learning viewing report</div><div className="text-xs text-muted-foreground">Page opens by person, module and browser</div></div>

@@ -113,7 +113,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <Link href="/sops" className={is("/sops") ? "is-active" : ""} data-testid="mobile-nav-sops"><BookOpen /><span>SOPs</span></Link>
           <Link href="/learnings" className={is("/learnings") ? "is-active" : ""} data-testid="mobile-nav-learn"><PlayCircle /><span>Learn</span></Link>
           {isManager(user) ? (
-            <button ref={toolsButtonRef} type="button" className={toolsOpen || managerPage ? "is-active" : ""} onClick={() => setToolsOpen((v) => !v)} aria-expanded={toolsOpen} aria-controls="manager-tools" data-testid="button-mobile-tools">{toolsOpen ? <X /> : <MoreHorizontal />}<span>Manager</span></button>
+            <button ref={toolsButtonRef} type="button" className={toolsOpen || managerPage ? "is-active" : ""} onClick={() => setToolsOpen((v) => !v)} aria-expanded={toolsOpen} aria-controls="manager-tools" data-testid="button-mobile-tools">{toolsOpen ? <X /> : <MoreHorizontal />}<span>Tools</span></button>
           ) : <Link href="/login" data-testid="mobile-nav-account"><ArrowLeftRight /><span>Account</span></Link>}
         </nav>
         {toolsOpen && isManager(user) && <div ref={toolsRef} id="manager-tools" className="hit-manager-tools-popover" role="group" aria-label="Manager tools"><Link href="/toolkit" data-testid="mobile-manager-toolkit"><Wrench /><span>Manager Toolkit</span></Link><Link href="/register-device" data-testid="mobile-manager-devices"><Smartphone /><span>Register device</span></Link>{isEditor(user) && <Link href="/admin" data-testid="mobile-manager-admin"><Settings2 /><span>Admin</span></Link>}</div>}
