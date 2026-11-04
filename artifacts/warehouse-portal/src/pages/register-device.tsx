@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Copy, RotateCcw } from "lucide-react";
-import { useListEmployees, getListEmployeesQueryKey, useRegisterDevice, type Registration } from "@workspace/api-client-react";
+import { useListEmployees, getListEmployeesQueryKey, useRegisterDevice, getGetSessionQueryKey, type Registration, type JobLevel } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { ErrorPanel, ListSkeleton, PageHead, Restricted } from "@/components/portal-ui";
 import { AREAS, isManager } from "@/lib/portal";
@@ -24,6 +24,7 @@ export default function RegisterDevicePage() {
   const { toast } = useToast();
   const [mode, setMode] = useState<"existing" | "new">("existing");
   const [selected, setSelected] = useState("");
+  const [jobLevel, setJobLevel] = useState<JobLevel>("Frontline Employee");
   const [form, setForm] = useState({ name: "", employeeId: "", area: "Receiving" });
   const [result, setResult] = useState<Registration | null>(null);
   const emps = useListEmployees({ query: { enabled: mgr, queryKey: getListEmployeesQueryKey(), refetchOnMount: true } });
@@ -32,9 +33,9 @@ export default function RegisterDevicePage() {
   if (!mgr) return <Restricted need="manager" />;
 
   function generate() {
-    const data = mode === "existing" ? { employeeUserId: selected } : form;
+    const data = mode === "existing" ? { employeeUserId: selected, jobLevel } : { ...form, jobLevel };
     reg.mutate({ data }, {
-      onSuccess: (r) => { setResult(r); qc.invalidateQueries({ queryKey: getListEmployeesQueryKey() }); },
+      onSuccess: (r) => { setResult(r); qc.invalidateQueries({ queryKey: getListEmployeesQueryKey() }); qc.invalidateQueries({ queryKey: getGetSessionQueryKey() }); },
       onError: () => toast({ title: "Couldn't generate code", description: "Check the details and try again.", variant: "destructive" }),
     });
   }
@@ -49,7 +50,7 @@ export default function RegisterDevicePage() {
           <div className="p-6 text-center">
             <div className="text-sm text-muted-foreground">One-time code for</div>
             <div className="font-display text-2xl font-bold uppercase" data-testid="text-reg-employee">{result.employee.name}</div>
-            <div className="font-mono text-xs text-muted-foreground">#{result.employee.employeeId} · {result.employee.area}</div>
+            <div className="font-mono text-xs text-muted-foreground">#{result.employee.employeeId} · {result.employee.jobLevel} · {result.employee.area}</div>
             <div className="my-6 font-mono text-5xl font-semibold tracking-[0.25em]" data-testid="text-reg-code">{result.code}</div>
             <div className="font-mono text-sm"><Countdown until={result.expiresAt} /></div>
             <p className="mt-4 text-sm text-muted-foreground">On their phone: open the portal, choose <b>Employee device code</b>, enter this code. Works once, expires in 15 minutes.</p>
@@ -68,7 +69,7 @@ export default function RegisterDevicePage() {
       <PageHead kicker="Managers" title="Register a Device">Get an employee's phone onto the portal in under a minute.</PageHead>
       <div className="mb-4 grid grid-cols-2 gap-1 rounded-md bg-muted p-1">
         {(["existing", "new"] as const).map((m) => (
-          <button key={m} onClick={() => setMode(m)} className={`rounded px-3 py-2 text-xs font-semibold uppercase tracking-wider ${mode === m ? "bg-card shadow-sm" : "text-muted-foreground"}`} data-testid={`tab-${m}`}>{m === "existing" ? "Existing employee" : "Add new"}</button>
+          <button key={m} onClick={() => { setMode(m); setSelected(""); setJobLevel("Frontline Employee"); }} className={`rounded px-3 py-2 text-xs font-semibold uppercase tracking-wider ${mode === m ? "bg-card shadow-sm" : "text-muted-foreground"}`} data-testid={`tab-${m}`}>{m === "existing" ? "Existing employee" : "Add new"}</button>
         ))}
       </div>
       {mode === "existing" ? (
@@ -76,11 +77,11 @@ export default function RegisterDevicePage() {
           <div className="max-h-[50dvh] overflow-y-auto rounded-lg border border-border bg-card">
             {(emps.data ?? []).length === 0 && <div className="p-6 text-center text-sm text-muted-foreground">No employees yet. Add one.</div>}
             {(emps.data ?? []).map((e) => (
-              <button key={e.id} onClick={() => setSelected(e.id)} data-testid={`option-employee-${e.id}`}
+              <button key={e.id} onClick={() => { setSelected(e.id); setJobLevel(e.jobLevel); }} data-testid={`option-employee-${e.id}`}
                 className={`flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left last:border-0 ${selected === e.id ? "bg-accent/25" : "hover:bg-secondary"}`}>
                 <span className={`h-4 w-4 rounded-full border-2 ${selected === e.id ? "border-primary bg-primary" : "border-input"}`} />
                 <span className="flex-1 font-semibold">{e.name}</span>
-                <span className="font-mono text-xs text-muted-foreground">#{e.employeeId} · {e.area}</span>
+                <span className="font-mono text-xs text-muted-foreground">#{e.employeeId} · {e.jobLevel} · {e.area}</span>
               </button>
             ))}
           </div>
@@ -94,6 +95,13 @@ export default function RegisterDevicePage() {
           </select>
         </div>
       )}
+      <label className="mt-4 block">
+        <span className="mb-1 block text-sm font-semibold">Job level</span>
+        <select className={inputCls} value={jobLevel} onChange={event => setJobLevel(event.target.value as JobLevel)} data-testid="select-job-level">
+          <option>Frontline Employee</option><option>Lead</option><option>Supervisor</option>
+        </select>
+        <span className="mt-1 block text-xs text-muted-foreground">Manager accounts use manager sign-in. An existing employee’s job level is saved when you generate their code.</span>
+      </label>
       <button disabled={!ready || reg.isPending} onClick={generate} className="mt-4 w-full rounded-md bg-primary px-4 py-3.5 text-sm font-semibold uppercase tracking-wider text-primary-foreground disabled:opacity-50" data-testid="button-generate-code">
         {reg.isPending ? "Generating..." : "Generate one-time code"}
       </button>

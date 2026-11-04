@@ -2,8 +2,8 @@ import { db, portalUsers, portalResources } from "@workspace/db";
 
 export async function seedPortal() {
   await db.insert(portalUsers).values([
-    { id: "m1", name: "Alex Morgan", employeeId: "M001", area: "Shipping", role: "Manager", editor: true },
-    { id: "m2", name: "Jordan Lee", employeeId: "M002", area: "Receiving", role: "Manager", editor: false },
+    { id: "m1", name: "Alex Morgan", employeeId: "M001", area: "Shipping", role: "Manager", jobLevel: "Manager", editor: true },
+    { id: "m2", name: "Jordan Lee", employeeId: "M002", area: "Receiving", role: "Manager", jobLevel: "Manager", editor: false },
     { id: "e1", name: "Sam Rivera", employeeId: "WH1042", area: "Packing", role: "Employee", editor: false },
     { id: "e2", name: "Taylor Brooks", employeeId: "WH1058", area: "Picking", role: "Employee", editor: false },
   ]).onConflictDoNothing();

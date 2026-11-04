@@ -58,12 +58,23 @@ export const UserRole = {
   Manager: 'Manager',
 } as const;
 
+export type JobLevel = typeof JobLevel[keyof typeof JobLevel];
+
+
+export const JobLevel = {
+  Frontline_Employee: 'Frontline Employee',
+  Lead: 'Lead',
+  Supervisor: 'Supervisor',
+  Manager: 'Manager',
+} as const;
+
 export interface User {
   id: string;
   name: string;
   employeeId: string;
   area: string;
   role: UserRole;
+  jobLevel: JobLevel;
   editor: boolean;
 }
 
@@ -158,6 +169,7 @@ export interface RegistrationInput {
   name?: string;
   employeeId?: string;
   area?: string;
+  jobLevel?: JobLevel;
 }
 
 export interface Registration {

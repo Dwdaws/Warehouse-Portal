@@ -7,6 +7,7 @@
 
 export * from './getViewingReportParams';
 export * from './healthStatus';
+export * from './jobLevel';
 export * from './learningViewInput';
 export * from './learningViewReceipt';
 export * from './registration';

@@ -7,6 +7,7 @@ export const portalUsers = pgTable("portal_users", {
   employeeId: text("employee_id").notNull().unique(),
   area: text("area").notNull(),
   role: text("role").notNull(),
+  jobLevel: text("job_level").notNull().default("Frontline Employee"),
   editor: boolean("editor").notNull().default(false),
 });
 export const portalResources = pgTable("portal_resources", {

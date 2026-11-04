@@ -4,6 +4,7 @@
  * Api
  * OpenAPI spec version: 0.1.0
  */
+import type { JobLevel } from './jobLevel';
 import type { UserRole } from './userRole';
 
 export interface User {
@@ -12,5 +13,6 @@ export interface User {
   employeeId: string;
   area: string;
   role: UserRole;
+  jobLevel: JobLevel;
   editor: boolean;
 }

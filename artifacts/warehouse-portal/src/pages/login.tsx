@@ -5,6 +5,7 @@ import { ArrowLeft, Building2, KeyRound, LogOut } from "lucide-react";
 import { useSignIn, useSignOut } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { SIGNED_OUT_FLAG } from "@/lib/portal";
+import { SafetyNotice } from "@/components/safety-notice";
 
 export default function LoginPage() {
   const { user, session } = useSessionUser();
@@ -37,6 +38,7 @@ export default function LoginPage() {
       <div className="h-2 bg-primary-foreground/20" />
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-8">
         {user && <Link href="/" className="mb-6 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground/70" data-testid="link-back-home"><ArrowLeft className="h-3.5 w-3.5" /> Back to portal</Link>}
+        <SafetyNotice />
         <img src={`${import.meta.env.BASE_URL}images/hit-brand/logo-white.png`} alt="Hit Promotional Products" className="mb-6 h-24 w-auto self-start object-contain" />
         <div className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">Demo sign-in</div>
         <h1 className="mt-2 font-display text-4xl font-bold leading-tight">Warehouse Portal</h1>
@@ -44,7 +46,7 @@ export default function LoginPage() {
 
         {user && (
           <div className="mt-6 flex items-center justify-between rounded-lg border border-primary-foreground/15 px-4 py-3 text-sm">
-            <span>Signed in as <b>{user.name}</b> ({user.role}{user.editor ? ", Editor" : ""})</span>
+            <span>Signed in as <b>{user.name}</b> ({user.jobLevel}{user.editor ? ", Editor" : ""})</span>
             <button onClick={out} className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase text-accent" data-testid="button-sign-out"><LogOut className="h-3.5 w-3.5" /> Sign out</button>
           </div>
         )}

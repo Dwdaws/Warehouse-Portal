@@ -59,7 +59,7 @@ export function HitHome() {
   return (
     <>
       <div className="hit-topline">
-        <span className="hit-topline-label"><span className="hit-location-dot" /> Shift reference <span aria-hidden="true">·</span> {user?.area}</span>
+        <span className="hit-topline-label" data-testid="text-job-level"><span className="hit-location-dot" /> {user?.jobLevel || (user?.role === "Manager" ? "Manager" : "Frontline Employee")}</span>
         {isManager(user) && <Link href="/register-device" className="hit-topline-link" data-testid="link-register-device"><Smartphone /> Register device</Link>}
       </div>
       <section className="hit-welcome">

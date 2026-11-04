@@ -19,6 +19,7 @@ export const GetSessionResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }),zod.null()]),
   "managers": zod.array(zod.object({
@@ -27,6 +28,7 @@ export const GetSessionResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }))
 })
@@ -44,6 +46,7 @@ export const SignInResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }),zod.null()]),
   "managers": zod.array(zod.object({
@@ -52,6 +55,7 @@ export const SignInResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }))
 })
@@ -157,6 +161,7 @@ export const ListEmployeesResponseItem = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 })
 export const ListEmployeesResponse = zod.array(ListEmployeesResponseItem)
@@ -166,7 +171,8 @@ export const RegisterDeviceBody = zod.object({
   "employeeUserId": zod.string().optional(),
   "name": zod.string().optional(),
   "employeeId": zod.string().optional(),
-  "area": zod.string().optional()
+  "area": zod.string().optional(),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']).optional()
 })
 
 export const RegisterDeviceResponse = zod.object({
@@ -178,6 +184,7 @@ export const RegisterDeviceResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 })
 })
@@ -241,6 +248,7 @@ export const GetViewingReportResponse = zod.object({
   "employeeId": zod.string(),
   "area": zod.string(),
   "role": zod.enum(['Employee', 'Manager']),
+  "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 })),
   "modules": zod.array(zod.object({

@@ -93,6 +93,7 @@ router.post("/portal/registrations", async (req,res):Promise<void> => {
   const parsed=RegisterDeviceBody.safeParse(req.body);
   if(!parsed.success){res.status(400).json({error:"Invalid registration details."});return;}
   const input=parsed.data;
+  if(input.jobLevel==="Manager"){res.status(400).json({error:"Manager accounts use manager sign-in. Choose Frontline Employee, Lead, or Supervisor for employee device registration."});return;}
   let employee:User|undefined;
   if(input.employeeUserId) {
     [employee]=await db.select().from(portalUsers).where(and(eq(portalUsers.id,input.employeeUserId),eq(portalUsers.role,"Employee")));
@@ -100,9 +101,12 @@ router.post("/portal/registrations", async (req,res):Promise<void> => {
     if(!input.name?.trim() || !input.employeeId?.trim() || !areas.includes(input.area ?? "")){res.status(400).json({error:"Name, employee ID, and warehouse area are required."});return;}
     const [duplicate]=await db.select().from(portalUsers).where(eq(portalUsers.employeeId,input.employeeId.trim()));
     if(duplicate){res.status(409).json({error:"That employee ID already exists. Select the existing employee."});return;}
-    [employee]=await db.insert(portalUsers).values({id:randomUUID(),name:input.name.trim(),employeeId:input.employeeId.trim(),area:input.area!,role:"Employee",editor:false}).returning();
+    [employee]=await db.insert(portalUsers).values({id:randomUUID(),name:input.name.trim(),employeeId:input.employeeId.trim(),area:input.area!,role:"Employee",jobLevel:input.jobLevel ?? "Frontline Employee",editor:false}).returning();
   }
   if(!employee){res.status(404).json({error:"Employee not found."});return;}
+  if(input.jobLevel && employee.jobLevel!==input.jobLevel){
+    [employee]=await db.update(portalUsers).set({jobLevel:input.jobLevel}).where(eq(portalUsers.id,employee.id)).returning();
+  }
   const code=String(randomInt(100000,1000000));
   const expiresAt=new Date(Date.now()+15*60000);
   await db.delete(portalCodes).where(eq(portalCodes.userId,employee.id));

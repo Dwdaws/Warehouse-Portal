@@ -5,6 +5,7 @@ import { BookOpen, Home, PlayCircle, Settings2, Smartphone, Wrench, ArrowLeftRig
 import { useGetSession, useSignIn, getGetSessionQueryKey, type Session, type User } from "@workspace/api-client-react";
 import { SIGNED_OUT_FLAG, isEditor, isManager } from "@/lib/portal";
 import { useState } from "react";
+import { SafetyNotice } from "./safety-notice";
 
 const SessionCtx = createContext<{ user: User | null; session?: Session }>({ user: null });
 export const useSessionUser = () => useContext(SessionCtx);
@@ -16,7 +17,7 @@ function AccountChip({ user, dark }: { user: User; dark?: boolean }) {
       <span className="hit-avatar">{initials}</span>
       <span className="hit-account-copy">
         <span className="hit-account-name" data-testid="text-current-user">{user.name}</span>
-        <span className="hit-account-meta">{user.role}{user.editor ? " · Editor" : ""} · demo</span>
+        <span className="hit-account-meta">{user.jobLevel || (user.role === "Manager" ? "Manager" : "Frontline Employee")}{user.editor ? " · Editor" : ""} · demo</span>
       </span>
       <ArrowLeftRight aria-hidden="true" />
     </Link>
@@ -106,7 +107,7 @@ export function Shell({ children }: { children: ReactNode }) {
             {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
           </Link>
         </header>
-        <main className="hit-main"><div className="hit-main-inner">{children}</div></main>
+        <main className="hit-main"><div className="hit-main-inner"><SafetyNotice />{children}</div></main>
         <nav className="hit-mobile-nav" aria-label="Mobile navigation">
           <Link href="/" className={is("/") ? "is-active" : ""} data-testid="mobile-nav-home"><Home /><span>Home</span></Link>
           <Link href="/sops" className={is("/sops") ? "is-active" : ""} data-testid="mobile-nav-sops"><BookOpen /><span>SOPs</span></Link>

@@ -34,6 +34,7 @@ export default function ViewingReportPage() {
   const people = data?.people ?? [];
   const modules = data?.modules ?? [];
   const records = data?.records ?? [];
+  const jobLevels = new Map(people.map(person => [person.id, person.jobLevel]));
 
   return (
     <div>
@@ -53,7 +54,7 @@ export default function ViewingReportPage() {
           <select value={userId} onChange={(e) => setUserId(e.target.value)} className={selectCls} data-testid="select-person">
             <option value="">All people</option>
             {people.map((p) => (
-              <option key={p.id} value={p.id}>{p.name} · {p.employeeId}{p.role === "Manager" ? " · Manager" : ""}</option>
+              <option key={p.id} value={p.id}>{p.name} · {p.employeeId} · {p.jobLevel}</option>
             ))}
           </select>
         </label>
@@ -84,7 +85,7 @@ export default function ViewingReportPage() {
                 <div className="truncate font-semibold">{r.name}</div>
                 <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                   {r.employeeId}
-                  {r.role === "Manager" && <span className="ml-1.5 rounded bg-primary px-1 py-px text-primary-foreground">Manager</span>}
+                  <span className="ml-1.5 rounded bg-secondary px-1 py-px text-secondary-foreground">{jobLevels.get(r.userId) || r.role}</span>
                 </div>
               </div>
               <div className="min-w-0 text-sm">

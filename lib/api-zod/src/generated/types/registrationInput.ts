@@ -4,10 +4,12 @@
  * Api
  * OpenAPI spec version: 0.1.0
  */
+import type { JobLevel } from './jobLevel';
 
 export interface RegistrationInput {
   employeeUserId?: string;
   name?: string;
   employeeId?: string;
   area?: string;
+  jobLevel?: JobLevel;
 }

@@ -216,14 +216,18 @@ components:
         status: { type: string }
     User:
       type: object
-      required: [id, name, employeeId, area, role, editor]
+      required: [id, name, employeeId, area, role, jobLevel, editor]
       properties:
         id: { type: string }
         name: { type: string }
         employeeId: { type: string }
         area: { type: string }
         role: { type: string, enum: [Employee, Manager] }
+        jobLevel: { $ref: "#/components/schemas/JobLevel" }
         editor: { type: boolean }
+    JobLevel:
+      type: string
+      enum: [Frontline Employee, Lead, Supervisor, Manager]
     Session:
       type: object
       required: [user, managers]
@@ -277,6 +281,7 @@ components:
         name: { type: string }
         employeeId: { type: string }
         area: { type: string }
+        jobLevel: { $ref: "#/components/schemas/JobLevel" }
     Registration:
       type: object
       required: [code, expiresAt, employee]

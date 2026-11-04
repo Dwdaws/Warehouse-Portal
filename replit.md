@@ -42,6 +42,8 @@ E-learning viewing records identify the signed-in person and browser, with first
 - The portal is an on-demand reference tool, not a learning "have-to": employees should be able to look something up when they need help doing their work. Prioritize finding practical answers over course assignments, completion targets, or compliance-driven prompts.
 - The portal should fit Hit Promotional Products' branding while remaining a practical internal warehouse reference tool, not a promotional-products sales catalog.
 - The user approved the Hit-branded desktop and phone designs for the live portal. Retain that direction rather than reverting to the original generic yellow hazard-stripe identity.
+- Distinguish people by job level: Frontline Employee, Lead, Supervisor, and Manager, rather than showing their warehouse area as the home-page identity label.
+- Display a safety disclaimer telling employees not to use the portal while operating heavy machinery or in the path of moving equipment, and to stop in a safe location before using their device.
 - Employees should be able to read Word reference documents directly in the app rather than being required to download them. The user is also willing to supply PDFs when exact document layout matters.
 - Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
 - Archived resources are hidden, never deleted.
