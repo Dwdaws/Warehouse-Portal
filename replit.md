@@ -1,6 +1,6 @@
-# [Project name]
+# Warehouse Portal
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Mobile-first prototype resource hub for a promotional-products warehouse.
 
 ## Run & Operate
 
@@ -30,15 +30,20 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+An internal hub that complements, rather than replaces, the existing LMS. Employees access SOPs and e-learning; managers additionally access blank document templates and employee device registration. Content-editor managers manage shared resources.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- This is a proof of concept that the user's IT team will rebuild from scratch. Prioritize clear, realistic workflows and simple, readable code over production-grade security or scale.
+- Authentication is intentionally simulated: seeded manager picker, no passwords, and manager-assisted employee device registration.
+- Warehouse employees use phones on the floor. Aim for resources reachable within two taps of home.
+- Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
+- Archived resources are hidden, never deleted.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Demo manager entry is not secure company SSO. Do not use this prototype for confidential content or operational procedures without the IT rebuild.
+- Seeded documents are marked demonstration content; e-learning requires an actual MeetQuinn share URL supplied by a content editor.
 
 ## Pointers
 

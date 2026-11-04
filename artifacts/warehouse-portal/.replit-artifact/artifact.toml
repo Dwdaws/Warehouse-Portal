@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Warehouse Portal"
+description = "Mobile-first prototype resource hub for warehouse employees and managers, with SOPs, e-learning, manager templates, content editing and simulated device registration."
+version = "1.0.0"
+id = "artifacts/warehouse-portal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23965
+
+[services.development]
+run = "pnpm --filter @workspace/warehouse-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/warehouse-portal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/warehouse-portal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23965"
+BASE_PATH = "/"

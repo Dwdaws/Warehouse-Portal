@@ -1,36 +1,198 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
 servers:
   - url: /api
-    description: Base API path
-tags:
-  - name: health
-    description: Health operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
-      tags: [health]
-      summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
           content:
             application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+  /portal/session:
+    get:
+      operationId: getSession
+      responses:
+        "200":
+          description: Demo session and available managers
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Session" }
+    post:
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SessionInput" }
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Session" }
+    delete:
+      operationId: signOut
+      responses:
+        "200":
+          description: Signed out
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+  /portal/resources:
+    get:
+      operationId: listResources
+      responses:
+        "200":
+          description: Role-filtered resources; editors also see archived items
+          content:
+            application/json:
               schema:
-                $ref: "#/components/schemas/HealthStatus"
+                type: array
+                items: { $ref: "#/components/schemas/Resource" }
+    post:
+      operationId: saveResource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResourceInput" }
+      responses:
+        "200":
+          description: Created or updated resource
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Resource" }
+  /portal/employees:
+    get:
+      operationId: listEmployees
+      responses:
+        "200":
+          description: Employees for registration
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/User" }
+  /portal/registrations:
+    post:
+      operationId: registerDevice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RegistrationInput" }
+      responses:
+        "200":
+          description: One-time code valid for fifteen minutes
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Registration" }
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UploadInput" }
+      responses:
+        "200":
+          description: Direct upload destination
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Upload" }
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
-        status:
-          type: string
-      required:
-        - status
-
+        status: { type: string }
+    User:
+      type: object
+      required: [id, name, employeeId, area, role, editor]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        employeeId: { type: string }
+        area: { type: string }
+        role: { type: string, enum: [Employee, Manager] }
+        editor: { type: boolean }
+    Session:
+      type: object
+      required: [user, managers]
+      properties:
+        user:
+          anyOf:
+            - { $ref: "#/components/schemas/User" }
+            - { type: "null" }
+        managers:
+          type: array
+          items: { $ref: "#/components/schemas/User" }
+    SessionInput:
+      type: object
+      properties:
+        userId: { type: string }
+        code: { type: string }
+    ResourceInput:
+      type: object
+      required: [kind, title, description, area, audience]
+      properties:
+        id: { type: string }
+        kind: { type: string, enum: [sop, learning, toolkit] }
+        title: { type: string, minLength: 1 }
+        description: { type: string }
+        area: { type: string, enum: [Receiving, Picking, Packing, Shipping, Inventory, Safety] }
+        audience: { type: string, enum: [Employees, Managers, Both] }
+        owner: { type: string }
+        version: { type: string }
+        effectiveDate: { type: string }
+        lastReviewed: { type: string }
+        fileUrl: { type: string }
+        fileName: { type: string }
+        shareUrl: { type: string }
+        minutes: { type: integer, minimum: 1 }
+        category: { type: string }
+        archived: { type: boolean }
+    Resource:
+      allOf:
+        - { $ref: "#/components/schemas/ResourceInput" }
+        - type: object
+          required: [id, createdAt, updatedAt]
+          properties:
+            id: { type: string }
+            createdAt: { type: string }
+            updatedAt: { type: string }
+    RegistrationInput:
+      type: object
+      properties:
+        employeeUserId: { type: string }
+        name: { type: string }
+        employeeId: { type: string }
+        area: { type: string }
+    Registration:
+      type: object
+      required: [code, expiresAt, employee]
+      properties:
+        code: { type: string }
+        expiresAt: { type: string }
+        employee: { $ref: "#/components/schemas/User" }
+    UploadInput:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name: { type: string }
+        size: { type: integer, minimum: 1, maximum: 20971520 }
+        contentType: { type: string }
+    Upload:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL: { type: string }
+        objectPath: { type: string }
