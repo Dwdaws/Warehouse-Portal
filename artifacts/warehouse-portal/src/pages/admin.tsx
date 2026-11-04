@@ -58,6 +58,8 @@ function Editor({ initial, onDone }: { initial: ResourceInput; onDone: () => voi
     e.preventDefault();
     setErr("");
     if (!f.title.trim()) return setErr("Title is required.");
+    if (hasFile && !file && !f.fileUrl) return setErr("Choose a document to upload.");
+    if (f.kind === "learning" && !f.shareUrl?.trim()) return setErr("Add the MeetQuinn share link for this e-learning.");
     if (f.kind === "learning" && f.shareUrl && !f.shareUrl.startsWith("https://")) return setErr("MeetQuinn link must start with https://");
     setBusy(true);
     try {
@@ -94,7 +96,7 @@ function Editor({ initial, onDone }: { initial: ResourceInput; onDone: () => voi
     <form onSubmit={submit} className="space-y-4 p-1">
       <div className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
         {(["sop", "learning", "toolkit"] as Kind[]).map((k) => (
-          <button key={k} type="button" disabled={!!f.id} onClick={() => setF({ ...blank(k), title: f.title, description: f.description, area: f.area })}
+          <button key={k} type="button" disabled={!!f.id} onClick={() => { setF({ ...blank(k), title: f.title, description: f.description, area: f.area }); setFile(null); setErr(""); }}
             className={`rounded px-2 py-1.5 text-xs font-semibold uppercase tracking-wider ${f.kind === k ? "bg-card shadow-sm" : "text-muted-foreground"} disabled:opacity-60`} data-testid={`tab-kind-${k}`}>{KIND_LABEL[k]}</button>
         ))}
       </div>
@@ -190,10 +192,16 @@ export default function AdminPage() {
 
   return (
     <div>
-      <PageHead kicker="Content editors" title="Admin">Add, edit, archive and restore. Archived items are hidden from everyone, never deleted.</PageHead>
+      <PageHead kicker="Content editors" title="Admin">Upload documents, add e-learnings, and manage your resource library. Archived items are hidden from everyone, never deleted.</PageHead>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <button onClick={() => setEditing(blank(kind === "all" ? "sop" : kind))} className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground" data-testid="button-add">
-          <Plus className="h-4 w-4" /> Add resource
+        <button onClick={() => setEditing(blank("sop"))} className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground" data-testid="button-add-document">
+          <Plus className="h-4 w-4" /> Add document
+        </button>
+        <button onClick={() => setEditing(blank("learning"))} className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground" data-testid="button-add-learning">
+          <Plus className="h-4 w-4" /> Add e-learning
+        </button>
+        <button onClick={() => setEditing(blank("toolkit"))} className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2.5 text-sm font-semibold" data-testid="button-add-template">
+          <Plus className="h-4 w-4" /> Add manager template
         </button>
         {stale > 0 && <span className="text-sm text-muted-foreground"><b className="text-foreground">{stale}</b> SOPs due for review</span>}
       </div>
@@ -233,7 +241,7 @@ export default function AdminPage() {
 
       <Sheet open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-md">
-          <SheetHeader><SheetTitle className="font-display text-2xl uppercase">{editing?.id ? "Edit resource" : "New resource"}</SheetTitle></SheetHeader>
+          <SheetHeader><SheetTitle className="font-display text-2xl uppercase">{editing?.id ? "Edit resource" : editing?.kind === "learning" ? "Add e-learning" : editing?.kind === "toolkit" ? "Add manager template" : "Add document"}</SheetTitle></SheetHeader>
           {editing && <Editor key={editing.id ?? "new"} initial={editing} onDone={() => setEditing(null)} />}
         </SheetContent>
       </Sheet>
