@@ -44,6 +44,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 - Managers need additional areas such as Talent Management. Talent Management resources are manager-only.
 - Content groups classify resources by substance separately from area and audience: Inbound, Putaway and Storage, Orders and Transfers, Distribution Outbound, Inventory Accuracy, and System How-Tos and References. Editors may also enter additional group names.
 - Viewing records count e-learning page opens, not viewing progress, attention, or completion. The existing LMS remains the completion source of truth.
+- The user expects MeetQuinn to email them when an employee finishes a module; the portal's page-open report is sufficient alongside those completion notifications. Email delivery has not been verified here.
 - Browser identifiers are not hardware fingerprints: shared phones follow the signed-in employee, and clearing cookies creates a new browser identity.
 - Keep the existing embedded PDF viewer. The user chose to retain it despite Chrome blocking it in some embedded previews; Full screen and Download remain alternatives.
 
