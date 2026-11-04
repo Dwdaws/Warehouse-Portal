@@ -39,6 +39,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 - This is a proof of concept that the user's IT team will rebuild from scratch. Prioritize clear, realistic workflows and simple, readable code over production-grade security or scale.
 - Authentication is intentionally simulated: seeded manager picker, no passwords, and manager-assisted employee device registration.
 - Warehouse employees use phones on the floor. Aim for resources reachable within two taps of home.
+- The portal is an on-demand reference tool, not a learning "have-to": employees should be able to look something up when they need help doing their work. Prioritize finding practical answers over course assignments, completion targets, or compliance-driven prompts.
 - Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
 - Archived resources are hidden, never deleted.
 - Managers need additional areas such as Talent Management. Talent Management resources are manager-only.
