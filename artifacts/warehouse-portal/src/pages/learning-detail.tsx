@@ -4,6 +4,7 @@ import { useListResources, getListResourcesQueryKey } from "@workspace/api-clien
 import { useSessionUser } from "@/components/shell";
 import { AreaTag, EmptyPanel, ErrorPanel, ListSkeleton } from "@/components/portal-ui";
 import { canSee, isEditor } from "@/lib/portal";
+import { ViewRecorder } from "@/components/view-recorder";
 
 export default function LearningDetailPage() {
   const { id } = useParams();
@@ -46,6 +47,7 @@ export default function LearningDetailPage() {
           )}
         </div>
       </div>
+      <ViewRecorder key={`${user?.id}:${r.id}`} resourceId={r.id} />
       {r.description && <p className="mb-4 max-w-2xl text-sm text-muted-foreground">{r.description}</p>}
       {link ? (
         <div className="relative w-full overflow-hidden rounded-lg border border-border bg-card" style={{ aspectRatio: "16 / 10" }}>

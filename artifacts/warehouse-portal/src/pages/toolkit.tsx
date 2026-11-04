@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Download, FileSpreadsheet, FileText } from "lucide-react";
+import { Link } from "wouter";
+import { BarChart3, Download, FileSpreadsheet, FileText } from "lucide-react";
 import { useListResources, getListResourcesQueryKey, type Resource } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { EmptyPanel, ErrorPanel, ListSkeleton, PageHead, Restricted } from "@/components/portal-ui";
@@ -46,6 +47,10 @@ export default function ToolkitPage() {
   return (
     <div>
       <PageHead kicker="Managers only" title="Manager Toolkit">Blank master copies. Save completed files on your own computer; the portal only keeps the current template.</PageHead>
+      <Link href="/viewing-report" className="mb-5 flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:bg-secondary" data-testid="link-viewing-report">
+        <BarChart3 className="h-5 w-5" />
+        <div><div className="font-semibold">E-learning viewing report</div><div className="text-xs text-muted-foreground">Page opens by person, module and browser</div></div>
+      </Link>
       <AreaFilter value={area} onChange={setArea} />
       <GroupFilter resources={items} value={group} onChange={setGroup} />
       {list.isLoading ? <ListSkeleton /> : list.isError ? <ErrorPanel onRetry={() => list.refetch()} /> : groups.map((g) => (

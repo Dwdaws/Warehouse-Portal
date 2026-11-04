@@ -93,6 +93,38 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Registration" }
+  /portal/learning-views:
+    post:
+      operationId: recordLearningView
+      summary: Record an authorized e-learning page open
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LearningViewInput" }
+      responses:
+        "200":
+          description: Recorded; repeated event IDs do not increment the count
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LearningViewReceipt" }
+  /portal/viewing-report:
+    get:
+      operationId: getViewingReport
+      summary: Manager-only e-learning viewing history
+      parameters:
+        - in: query
+          name: userId
+          schema: { type: string }
+        - in: query
+          name: resourceId
+          schema: { type: string }
+      responses:
+        "200":
+          description: Page opens grouped by person, module, and browser device
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ViewingReport" }
   /storage/uploads/request-url:
     post:
       operationId: requestUploadUrl
@@ -109,6 +141,53 @@ paths:
               schema: { $ref: "#/components/schemas/Upload" }
 components:
   schemas:
+    LearningViewInput:
+      type: object
+      required: [resourceId, eventId]
+      properties:
+        resourceId: { type: string, minLength: 1 }
+        eventId: { type: string, format: uuid }
+    LearningViewReceipt:
+      type: object
+      required: [id, openedAt]
+      properties:
+        id: { type: string }
+        openedAt: { type: string }
+    ViewingReport:
+      type: object
+      required: [records, people, modules]
+      properties:
+        records:
+          type: array
+          items: { $ref: "#/components/schemas/ViewingRecord" }
+        people:
+          type: array
+          items: { $ref: "#/components/schemas/User" }
+        modules:
+          type: array
+          items: { $ref: "#/components/schemas/ReportModule" }
+    ReportModule:
+      type: object
+      required: [id, title, archived]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        archived: { type: boolean }
+    ViewingRecord:
+      type: object
+      required: [userId, name, employeeId, role, resourceId, title, deviceId, viewCount, firstViewedAt, lastViewedAt, archived]
+      properties:
+        userId: { type: string }
+        name: { type: string }
+        employeeId: { type: string }
+        role: { type: string, enum: [Employee, Manager] }
+        resourceId: { type: string }
+        title: { type: string }
+        deviceId: { type: string }
+        viewCount: { type: integer }
+        firstViewedAt: { type: string }
+        lastViewedAt: { type: string }
+        archived: { type: boolean }
     HealthStatus:
       type: object
       required: [status]

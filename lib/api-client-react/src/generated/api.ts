@@ -19,7 +19,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  GetViewingReportParams,
   HealthStatus,
+  LearningViewInput,
+  LearningViewReceipt,
   Registration,
   RegistrationInput,
   Resource,
@@ -28,7 +31,8 @@ import type {
   SessionInput,
   Upload,
   UploadInput,
-  User
+  User,
+  ViewingReport
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -655,6 +659,178 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getRegisterDeviceMutationOptions(options));
     }
+
+export const getRecordLearningViewUrl = () => {
+
+
+
+
+  return `/api/portal/learning-views`
+}
+
+/**
+ * @summary Record an authorized e-learning page open
+ */
+export const recordLearningView = async (learningViewInput: LearningViewInput, options?: Parameters<typeof customFetch>[1]): Promise<LearningViewReceipt> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<LearningViewReceipt>(getRecordLearningViewUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(learningViewInput)
+  }
+);}
+
+
+
+
+
+export const getRecordLearningViewMutationKey = () => ['recordLearningView'] as const;
+
+export const getRecordLearningViewMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordLearningView>>, TError,RecordLearningViewMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordLearningView>>, TError,RecordLearningViewMutationVariables, TContext> => {
+
+const mutationKey = getRecordLearningViewMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordLearningView>>, RecordLearningViewMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  recordLearningView(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordLearningViewMutationResult = NonNullable<Awaited<ReturnType<typeof recordLearningView>>>
+    export type RecordLearningViewMutationBody = BodyType<LearningViewInput>
+    export type RecordLearningViewMutationError = ErrorType<unknown>
+    export type RecordLearningViewMutationVariables = {data: BodyType<LearningViewInput>}
+
+    /**
+ * @summary Record an authorized e-learning page open
+ */
+export const useRecordLearningView = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordLearningView>>, TError,RecordLearningViewMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordLearningView>>,
+        TError,
+        RecordLearningViewMutationVariables,
+        TContext
+      > => {
+      return useMutation(getRecordLearningViewMutationOptions(options));
+    }
+
+export const getGetViewingReportUrl = (params?: GetViewingReportParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/portal/viewing-report?${stringifiedParams}` : `/api/portal/viewing-report`
+}
+
+/**
+ * @summary Manager-only e-learning viewing history
+ */
+export const getViewingReport = async (params?: GetViewingReportParams, options?: Parameters<typeof customFetch>[1]): Promise<ViewingReport> => {
+
+  return customFetch<ViewingReport>(getGetViewingReportUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetViewingReportQueryKey = (params?: GetViewingReportParams,) => {
+    return [
+    `/api/portal/viewing-report`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetViewingReportQueryOptions = <TData = Awaited<ReturnType<typeof getViewingReport>>, TError = ErrorType<unknown>>(params?: GetViewingReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViewingReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetViewingReportQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getViewingReport>>> = ({ signal }) => getViewingReport(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getViewingReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetViewingReportQueryResult = NonNullable<Awaited<ReturnType<typeof getViewingReport>>>
+export type GetViewingReportQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Manager-only e-learning viewing history
+ */
+
+export function useGetViewingReport<TData = Awaited<ReturnType<typeof getViewingReport>>, TError = ErrorType<unknown>>(
+ params?: GetViewingReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getViewingReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetViewingReportQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getRequestUploadUrlUrl = () => {
 

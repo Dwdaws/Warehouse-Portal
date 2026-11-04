@@ -5,9 +5,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './getViewingReportParams';
 export * from './healthStatus';
+export * from './learningViewInput';
+export * from './learningViewReceipt';
 export * from './registration';
 export * from './registrationInput';
+export * from './reportModule';
 export * from './resource';
 export * from './resourceInput';
 export * from './resourceInputArea';
@@ -19,3 +23,6 @@ export * from './upload';
 export * from './uploadInput';
 export * from './user';
 export * from './userRole';
+export * from './viewingRecord';
+export * from './viewingRecordRole';
+export * from './viewingReport';

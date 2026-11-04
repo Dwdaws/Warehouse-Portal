@@ -14,6 +14,7 @@ import LearningDetailPage from "@/pages/learning-detail";
 import ToolkitPage from "@/pages/toolkit";
 import AdminPage from "@/pages/admin";
 import RegisterDevicePage from "@/pages/register-device";
+import ViewingReportPage from "@/pages/viewing-report";
 import LoginPage from "@/pages/login";
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: true, retry: 1 } } });
@@ -31,6 +32,7 @@ function Router() {
           <Route path="/toolkit" component={ToolkitPage} />
           <Route path="/admin" component={AdminPage} />
           <Route path="/register-device" component={RegisterDevicePage} />
+          <Route path="/viewing-report" component={ViewingReportPage} />
           <Route path="/login" component={LoginPage} />
           <Route component={NotFound} />
         </Switch>

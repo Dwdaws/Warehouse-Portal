@@ -19,7 +19,7 @@ async function currentUser(req: Request) {
   const [user] = await db.select().from(portalUsers).where(eq(portalUsers.id, session.userId));
   return user;
 }
-async function requireRole(req: Request, res: Response, role: "user" | "manager" | "editor") {
+export async function requireRole(req: Request, res: Response, role: "user" | "manager" | "editor") {
   const user = await currentUser(req);
   if (!user) { res.status(401).json({error:"Please sign in to the demo."}); return undefined; }
   if ((role === "manager" && user.role !== "Manager") || (role === "editor" && !(user.role === "Manager" && user.editor))) {
@@ -27,7 +27,7 @@ async function requireRole(req: Request, res: Response, role: "user" | "manager"
   }
   return user;
 }
-function canView(user: User, data: Record<string, unknown>) {
+export function canView(user: User, data: Record<string, unknown>) {
   if (data.archived && !user.editor) return false;
   if (user.role === "Employee" && (data.kind === "toolkit" || data.audience === "Managers" || data.area === "Talent Management")) return false;
   return true;

@@ -183,6 +183,61 @@ export const RegisterDeviceResponse = zod.object({
 })
 
 
+/**
+ * @summary Record an authorized e-learning page open
+ */
+
+
+
+export const RecordLearningViewBody = zod.object({
+  "resourceId": zod.string().min(1),
+  "eventId": zod.string().uuid()
+})
+
+export const RecordLearningViewResponse = zod.object({
+  "id": zod.string(),
+  "openedAt": zod.string()
+})
+
+
+/**
+ * @summary Manager-only e-learning viewing history
+ */
+export const GetViewingReportQueryParams = zod.object({
+  "userId": zod.coerce.string().optional(),
+  "resourceId": zod.coerce.string().optional()
+})
+
+export const GetViewingReportResponse = zod.object({
+  "records": zod.array(zod.object({
+  "userId": zod.string(),
+  "name": zod.string(),
+  "employeeId": zod.string(),
+  "role": zod.enum(['Employee', 'Manager']),
+  "resourceId": zod.string(),
+  "title": zod.string(),
+  "deviceId": zod.string(),
+  "viewCount": zod.number().int(),
+  "firstViewedAt": zod.string(),
+  "lastViewedAt": zod.string(),
+  "archived": zod.boolean()
+})),
+  "people": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "employeeId": zod.string(),
+  "area": zod.string(),
+  "role": zod.enum(['Employee', 'Manager']),
+  "editor": zod.boolean()
+})),
+  "modules": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "archived": zod.boolean()
+}))
+})
+
+
 export const requestUploadUrlBodySizeMax = 20971520;
 
 

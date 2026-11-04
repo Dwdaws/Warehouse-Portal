@@ -32,6 +32,8 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 An internal hub that complements, rather than replaces, the existing LMS. Employees access SOPs and e-learning; managers additionally access blank document templates and employee device registration. Content-editor managers manage shared resources.
 
+E-learning viewing records identify the signed-in person and browser, with first/last open times and repeat-open counts. Managers access the Viewing Report through Manager Toolkit.
+
 ## User preferences
 
 - This is a proof of concept that the user's IT team will rebuild from scratch. Prioritize clear, realistic workflows and simple, readable code over production-grade security or scale.
@@ -41,6 +43,9 @@ An internal hub that complements, rather than replaces, the existing LMS. Employ
 - Archived resources are hidden, never deleted.
 - Managers need additional areas such as Talent Management. Talent Management resources are manager-only.
 - Content groups classify resources by substance separately from area and audience: Inbound, Putaway and Storage, Orders and Transfers, Distribution Outbound, Inventory Accuracy, and System How-Tos and References. Editors may also enter additional group names.
+- Viewing records count e-learning page opens, not viewing progress, attention, or completion. The existing LMS remains the completion source of truth.
+- Browser identifiers are not hardware fingerprints: shared phones follow the signed-in employee, and clearing cookies creates a new browser identity.
+- Keep the existing embedded PDF viewer. The user chose to retain it despite Chrome blocking it in some embedded previews; Full screen and Download remain alternatives.
 
 ## Gotchas
 

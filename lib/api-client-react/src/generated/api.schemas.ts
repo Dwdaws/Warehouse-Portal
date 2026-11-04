@@ -4,8 +4,37 @@
  * Api
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
+export interface LearningViewInput {
+  /** @minLength 1 */
+  resourceId: string;
+  eventId: string;
+}
+
+export interface LearningViewReceipt {
+  id: string;
+  openedAt: string;
+}
+
+export type ViewingRecordRole = typeof ViewingRecordRole[keyof typeof ViewingRecordRole];
+
+
+export const ViewingRecordRole = {
+  Employee: 'Employee',
+  Manager: 'Manager',
+} as const;
+
+export interface ViewingRecord {
+  userId: string;
+  name: string;
+  employeeId: string;
+  role: ViewingRecordRole;
+  resourceId: string;
+  title: string;
+  deviceId: string;
+  viewCount: number;
+  firstViewedAt: string;
+  lastViewedAt: string;
+  archived: boolean;
 }
 
 export type UserRole = typeof UserRole[keyof typeof UserRole];
@@ -23,6 +52,22 @@ export interface User {
   area: string;
   role: UserRole;
   editor: boolean;
+}
+
+export interface ReportModule {
+  id: string;
+  title: string;
+  archived: boolean;
+}
+
+export interface ViewingReport {
+  records: ViewingRecord[];
+  people: User[];
+  modules: ReportModule[];
+}
+
+export interface HealthStatus {
+  status: string;
 }
 
 export interface Session {
@@ -122,4 +167,9 @@ export interface Upload {
   uploadURL: string;
   objectPath: string;
 }
+
+export type GetViewingReportParams = {
+userId?: string;
+resourceId?: string;
+};
 

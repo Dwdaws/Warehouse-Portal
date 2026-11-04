@@ -76,7 +76,7 @@ export function Shell({ children }: { children: ReactNode }) {
     );
   }
 
-  const is = (p: string) => (p === "/" ? location === "/" : location.startsWith(p));
+  const is = (p: string) => (p === "/" ? location === "/" : location.startsWith(p) || (p === "/toolkit" && location.startsWith("/viewing-report")));
   const nav = [
     { href: "/", label: "Home", icon: Home, show: true },
     { href: "/sops", label: "SOPs", icon: BookOpen, show: true },
