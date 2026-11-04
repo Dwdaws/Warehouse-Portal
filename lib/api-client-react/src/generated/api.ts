@@ -32,7 +32,8 @@ import type {
   Upload,
   UploadInput,
   User,
-  ViewingReport
+  ViewingReport,
+  WordPreview
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -659,6 +660,83 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getRegisterDeviceMutationOptions(options));
     }
+
+export const getGetWordPreviewUrl = (id: string,) => {
+
+
+
+
+  return `/api/portal/resources/${id}/word-preview`
+}
+
+/**
+ * @summary Read a Word document without downloading or sharing it externally
+ */
+export const getWordPreview = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<WordPreview> => {
+
+  return customFetch<WordPreview>(getGetWordPreviewUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetWordPreviewQueryKey = (id: string,) => {
+    return [
+    `/api/portal/resources/${id}/word-preview`
+    ] as const;
+    }
+
+
+export const getGetWordPreviewQueryOptions = <TData = Awaited<ReturnType<typeof getWordPreview>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getWordPreview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWordPreviewQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWordPreview>>> = ({ signal }) => getWordPreview(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWordPreview>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWordPreviewQueryResult = NonNullable<Awaited<ReturnType<typeof getWordPreview>>>
+export type GetWordPreviewQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Read a Word document without downloading or sharing it externally
+ */
+
+export function useGetWordPreview<TData = Awaited<ReturnType<typeof getWordPreview>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getWordPreview>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetWordPreviewQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getRecordLearningViewUrl = () => {
 

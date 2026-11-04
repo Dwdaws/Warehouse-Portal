@@ -40,6 +40,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 - Authentication is intentionally simulated: seeded manager picker, no passwords, and manager-assisted employee device registration.
 - Warehouse employees use phones on the floor. Aim for resources reachable within two taps of home.
 - The portal is an on-demand reference tool, not a learning "have-to": employees should be able to look something up when they need help doing their work. Prioritize finding practical answers over course assignments, completion targets, or compliance-driven prompts.
+- Employees should be able to read Word reference documents directly in the app rather than being required to download them. The user is also willing to supply PDFs when exact document layout matters.
 - Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
 - Archived resources are hidden, never deleted.
 - Managers need additional areas such as Talent Management. Talent Management resources are manager-only.

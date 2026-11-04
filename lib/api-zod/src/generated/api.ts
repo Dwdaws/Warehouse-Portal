@@ -184,6 +184,19 @@ export const RegisterDeviceResponse = zod.object({
 
 
 /**
+ * @summary Read a Word document without downloading or sharing it externally
+ */
+export const GetWordPreviewParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetWordPreviewResponse = zod.object({
+  "html": zod.string(),
+  "format": zod.enum(['docx', 'doc'])
+})
+
+
+/**
  * @summary Record an authorized e-learning page open
  */
 

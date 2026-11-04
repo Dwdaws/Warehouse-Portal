@@ -26,3 +26,5 @@ export * from './userRole';
 export * from './viewingRecord';
 export * from './viewingRecordRole';
 export * from './viewingReport';
+export * from './wordPreview';
+export * from './wordPreviewFormat';

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useSessionUser } from "@/components/shell";
 import { AreaTag, EmptyPanel, ErrorPanel, ListSkeleton, MetaCell, StaleFlag } from "@/components/portal-ui";
 import { areaColor, canSee, fmtDate, isEditor, isPdf, isStale } from "@/lib/portal";
+import { WordPreview } from "@/components/word-preview";
 
 export default function SopDetailPage() {
   const { id } = useParams();
@@ -69,8 +70,10 @@ export default function SopDetailPage() {
           <EmptyPanel title="No file attached">An editor needs to upload this SOP's document.</EmptyPanel>
         ) : isPdf(r) ? (
           <iframe src={r.fileUrl} title={r.title} className="h-[75dvh] w-full rounded-lg border border-border bg-card" data-testid="iframe-pdf" />
+        ) : /\.docx?$/i.test(r.fileName || "") ? (
+          <WordPreview key={r.id} resourceId={r.id} title={r.title} revision={r.updatedAt} />
         ) : (
-          <EmptyPanel title="Word document">{r.fileName} can't preview in the browser. Use Download to open it.</EmptyPanel>
+          <EmptyPanel title="Preview unavailable">Use Download to open {r.fileName || "this document"}.</EmptyPanel>
         )}
       </div>
 

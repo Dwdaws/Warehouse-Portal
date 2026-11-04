@@ -4,6 +4,19 @@
  * Api
  * OpenAPI spec version: 0.1.0
  */
+export type WordPreviewFormat = typeof WordPreviewFormat[keyof typeof WordPreviewFormat];
+
+
+export const WordPreviewFormat = {
+  docx: 'docx',
+  doc: 'doc',
+} as const;
+
+export interface WordPreview {
+  html: string;
+  format: WordPreviewFormat;
+}
+
 export interface LearningViewInput {
   /** @minLength 1 */
   resourceId: string;

@@ -93,6 +93,21 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Registration" }
+  /portal/resources/{id}/word-preview:
+    get:
+      operationId: getWordPreview
+      summary: Read a Word document without downloading or sharing it externally
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Sanitized Word content suitable for in-app reference
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WordPreview" }
   /portal/learning-views:
     post:
       operationId: recordLearningView
@@ -141,6 +156,12 @@ paths:
               schema: { $ref: "#/components/schemas/Upload" }
 components:
   schemas:
+    WordPreview:
+      type: object
+      required: [html, format]
+      properties:
+        html: { type: string }
+        format: { type: string, enum: [docx, doc] }
     LearningViewInput:
       type: object
       required: [resourceId, eventId]
