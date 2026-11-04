@@ -1,12 +1,15 @@
 import { db, portalUsers, portalResources } from "@workspace/db";
+import { DEMO_PROFILES } from "./demo-profiles";
 
 export async function seedPortal() {
-  await db.insert(portalUsers).values([
-    { id: "m1", name: "Alex Morgan", employeeId: "M001", area: "Shipping", role: "Manager", jobLevel: "Manager", editor: true },
-    { id: "m2", name: "Jordan Lee", employeeId: "M002", area: "Receiving", role: "Manager", jobLevel: "Manager", editor: false },
-    { id: "e1", name: "Sam Rivera", employeeId: "WH1042", area: "Packing", role: "Employee", editor: false },
-    { id: "e2", name: "Taylor Brooks", employeeId: "WH1058", area: "Picking", role: "Employee", editor: false },
-  ]).onConflictDoNothing();
+  // Refresh access for these four fixed personas, including existing sessions.
+  // Never overwrite registered employees or resource content.
+  for (const profile of DEMO_PROFILES) {
+    await db.insert(portalUsers).values(profile).onConflictDoUpdate({
+      target: portalUsers.id,
+      set: { role: profile.role, jobLevel: profile.jobLevel, editor: profile.editor },
+    });
+  }
   const now = new Date();
   const sops = [
     ["receiving-check", "Receiving incoming shipments", "Receiving", "Check inbound promotional products against the purchase order, inspect cartons, and record discrepancies.", "3.1"],

@@ -22,7 +22,7 @@ export const GetSessionResponse = zod.object({
   "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }),zod.null()]),
-  "managers": zod.array(zod.object({
+  "demoProfiles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "employeeId": zod.string(),
@@ -49,7 +49,7 @@ export const SignInResponse = zod.object({
   "jobLevel": zod.enum(['Frontline Employee', 'Lead', 'Supervisor', 'Manager']),
   "editor": zod.boolean()
 }),zod.null()]),
-  "managers": zod.array(zod.object({
+  "demoProfiles": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string(),
   "employeeId": zod.string(),

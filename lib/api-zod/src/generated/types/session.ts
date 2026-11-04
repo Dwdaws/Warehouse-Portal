@@ -8,5 +8,5 @@ import type { User } from './user';
 
 export interface Session {
   user: User | null;
-  managers: User[];
+  demoProfiles: User[];
 }

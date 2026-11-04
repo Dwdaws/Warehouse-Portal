@@ -96,7 +96,7 @@ export interface HealthStatus {
 
 export interface Session {
   user: User | null;
-  managers: User[];
+  demoProfiles: User[];
 }
 
 export interface SessionInput {

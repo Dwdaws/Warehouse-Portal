@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Building2, KeyRound, LogOut } from "lucide-react";
-import { useSignIn, useSignOut } from "@workspace/api-client-react";
+import { useSignIn, useSignOut, getGetSessionQueryKey, type Session } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { SIGNED_OUT_FLAG } from "@/lib/portal";
 import { SafetyNotice } from "@/components/safety-notice";
@@ -17,13 +17,17 @@ export default function LoginPage() {
   const [code, setCode] = useState("");
   const [err, setErr] = useState("");
 
-  function done() {
+  function done(nextSession: Session) {
     sessionStorage.removeItem(SIGNED_OUT_FLAG);
-    qc.invalidateQueries();
+    // Do not briefly show the previous demo persona's restricted content.
+    const sessionKey = getGetSessionQueryKey();
+    qc.removeQueries({ predicate: query => query.queryKey[0] !== sessionKey[0] });
+    qc.setQueryData(sessionKey, nextSession);
     setLocation("/");
   }
-  function asManager(id: string) {
-    signIn.mutate({ data: { userId: id } }, { onSuccess: done, onError: () => setErr("Couldn't sign in that manager.") });
+  function asProfile(id: string) {
+    setErr("");
+    signIn.mutate({ data: { userId: id } }, { onSuccess: done, onError: () => setErr("Couldn't sign in that demo profile.") });
   }
   function redeem(e: React.FormEvent) {
     e.preventDefault(); setErr("");
@@ -52,27 +56,27 @@ export default function LoginPage() {
         )}
 
         <section className="mt-6 rounded-xl bg-card p-5 text-card-foreground">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Managers</div>
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Demo profiles · all four job levels</div>
           {!picker ? (
             <button onClick={() => setPicker(true)} className="mt-2 flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground" data-testid="button-sso">
-              <Building2 className="h-4 w-4" /> Sign in with company SSO (demo)
+              <Building2 className="h-4 w-4" /> Choose a demo profile
             </button>
           ) : (
             <div className="mt-2 overflow-hidden rounded-md border border-border">
-              {(session?.managers ?? []).map((m) => (
-                <button key={m.id} onClick={() => asManager(m.id)} disabled={signIn.isPending} className="flex w-full items-center gap-3 border-b border-border px-3 py-3 text-left last:border-0 hover:bg-secondary" data-testid={`option-manager-${m.id}`}>
+              {(session?.demoProfiles ?? []).map((m) => (
+                <button key={m.id} onClick={() => asProfile(m.id)} disabled={signIn.isPending} className="flex w-full items-center gap-3 border-b border-border px-3 py-3 text-left last:border-0 hover:bg-secondary" data-testid={`option-profile-${m.id}`}>
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-xs font-bold text-accent-foreground">{m.name.split(" ").map((p) => p[0]).join("").slice(0, 2)}</span>
-                  <span className="flex-1"><span className="block text-sm font-semibold">{m.name}</span><span className="font-mono text-[10px] uppercase text-muted-foreground">{m.area}{m.editor ? " · Content editor" : ""}</span></span>
+                  <span className="flex-1"><span className="block text-sm font-semibold">{m.name}</span><span className="block text-xs text-muted-foreground">{m.jobLevel}{m.editor ? " · Content editor" : ""}</span><span className="font-mono text-[10px] uppercase text-muted-foreground">{m.area}</span></span>
                 </button>
               ))}
-              {!session?.managers?.length && <div className="p-4 text-sm text-muted-foreground">No demo managers seeded.</div>}
+              {!session?.demoProfiles?.length && <div className="p-4 text-sm text-muted-foreground">No demo profiles seeded.</div>}
             </div>
           )}
         </section>
 
         <form onSubmit={redeem} className="mt-4 rounded-xl bg-card p-5 text-card-foreground">
           <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Employee device code</div>
-          <p className="mt-1 text-xs text-muted-foreground">Your manager generates this on Register a Device. One use, 15 minutes.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Your supervisor or manager generates this on Register a Device. One use, 15 minutes.</p>
           <div className="mt-3 flex gap-2">
             <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="CODE" autoCapitalize="characters" className="min-w-0 flex-1 rounded-md border border-input bg-background px-3 py-3 font-mono text-lg tracking-[0.3em] outline-none focus:ring-2 focus:ring-ring" data-testid="input-device-code" />
             <button disabled={!code.trim() || signIn.isPending} className="inline-flex items-center gap-2 rounded-md bg-accent px-4 font-semibold text-accent-foreground disabled:opacity-50" data-testid="button-redeem"><KeyRound className="h-4 w-4" /> Go</button>

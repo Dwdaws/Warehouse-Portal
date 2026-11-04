@@ -19,7 +19,7 @@ paths:
       operationId: getSession
       responses:
         "200":
-          description: Demo session and available managers
+          description: Demo session and available prototype profiles
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Session" }
@@ -230,13 +230,13 @@ components:
       enum: [Frontline Employee, Lead, Supervisor, Manager]
     Session:
       type: object
-      required: [user, managers]
+      required: [user, demoProfiles]
       properties:
         user:
           anyOf:
             - { $ref: "#/components/schemas/User" }
             - { type: "null" }
-        managers:
+        demoProfiles:
           type: array
           items: { $ref: "#/components/schemas/User" }
     SessionInput:

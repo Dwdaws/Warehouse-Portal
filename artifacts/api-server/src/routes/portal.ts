@@ -1,10 +1,11 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { randomBytes, randomUUID, randomInt } from "node:crypto";
-import { eq, and, gt } from "drizzle-orm";
+import { eq, and, gt, inArray } from "drizzle-orm";
 import { db, portalUsers, portalResources, portalSessions, portalCodes } from "@workspace/db";
 import { SignInBody, SaveResourceBody, SaveResourceResponse, RegisterDeviceBody, RequestUploadUrlBody, GetSessionResponse, ListResourcesResponse } from "@workspace/api-zod";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { makeMaster } from "../lib/portal-files";
+import { DEMO_PROFILE_IDS } from "../lib/demo-profiles";
 
 const router: IRouter = Router();
 const storage = new ObjectStorageService();
@@ -36,16 +37,17 @@ export function canView(user: User, data: Record<string, unknown>) {
   return true;
 }
 async function sessionPayload(user?: User) {
-  const managers = await db.select().from(portalUsers).where(eq(portalUsers.role, "Manager"));
-  return GetSessionResponse.parse({user:user ?? null,managers});
+  const demoProfiles = await db.select().from(portalUsers).where(inArray(portalUsers.id, DEMO_PROFILE_IDS));
+  demoProfiles.sort((a, b) => DEMO_PROFILE_IDS.indexOf(a.id) - DEMO_PROFILE_IDS.indexOf(b.id));
+  return GetSessionResponse.parse({user:user ?? null,demoProfiles});
 }
 router.get("/portal/session", async (req,res):Promise<void> => { res.json(await sessionPayload(await currentUser(req))); });
 router.post("/portal/session", async (req,res):Promise<void> => {
   const parsed = SignInBody.safeParse(req.body);
-  if (!parsed.success) {res.status(400).json({error:"Choose a demo manager or enter a device code."});return;}
+  if (!parsed.success) {res.status(400).json({error:"Choose a demo profile or enter a device code."});return;}
   let user: User | undefined;
   if (parsed.data.userId) {
-    [user] = await db.select().from(portalUsers).where(and(eq(portalUsers.id, parsed.data.userId),eq(portalUsers.role,"Manager")));
+    [user] = await db.select().from(portalUsers).where(and(eq(portalUsers.id, parsed.data.userId),inArray(portalUsers.id,DEMO_PROFILE_IDS)));
   } else if (parsed.data.code) {
     // DELETE RETURNING atomically consumes a code: concurrent redemption cannot reuse it.
     const [code] = await db.delete(portalCodes).where(and(eq(portalCodes.id,parsed.data.code.trim().toUpperCase()),gt(portalCodes.expiresAt,new Date()))).returning();
