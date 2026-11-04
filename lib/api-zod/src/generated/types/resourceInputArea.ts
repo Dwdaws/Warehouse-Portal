@@ -15,4 +15,5 @@ export const ResourceInputArea = {
   Shipping: 'Shipping',
   Inventory: 'Inventory',
   Safety: 'Safety',
+  Talent_Management: 'Talent Management',
 } as const;

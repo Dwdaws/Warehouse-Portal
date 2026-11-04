@@ -37,5 +37,17 @@ export async function seedPortal() {
     ["assessment-60","60-day assessment","Assess growing confidence, accuracy, and independence.","30-60-90 Assessments","xlsx"],
     ["assessment-90","90-day assessment","Evaluate readiness, reflect on progress, and set future goals.","30-60-90 Assessments","xlsx"],
   ]) items.push({id,kind:"toolkit",title,description,area:"Inventory",audience:"Managers",category,fileUrl:`/api/portal/files/${id}`,fileName:`${id}.${ext}`,archived:false,createdAt:now.toISOString(),updatedAt:now.toISOString()});
+  const sampleGroups: Record<string, string> = {
+    "receiving-check": "Inbound", "damaged-stock": "Inbound",
+    "pick-accuracy": "Orders and Transfers", "pack-standard": "Distribution Outbound",
+    "shipping-labels": "Distribution Outbound", "cycle-count": "Inventory Accuracy",
+    "floor-safety": "System How-Tos and References", "lift-safety": "Putaway and Storage",
+    "learning-1": "System How-Tos and References", "learning-2": "Distribution Outbound",
+    "learning-3": "Distribution Outbound", "learning-4": "Orders and Transfers",
+  };
+  for (const item of items) {
+    item.contentGroup = sampleGroups[String(item.id)] || "";
+    if (item.kind === "toolkit") item.area = "Talent Management";
+  }
   await db.insert(portalResources).values(items.map(data => ({ id: String(data.id), data }))).onConflictDoNothing();
 }

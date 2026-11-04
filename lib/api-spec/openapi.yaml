@@ -148,7 +148,8 @@ components:
         kind: { type: string, enum: [sop, learning, toolkit] }
         title: { type: string, minLength: 1 }
         description: { type: string }
-        area: { type: string, enum: [Receiving, Picking, Packing, Shipping, Inventory, Safety] }
+        area: { type: string, enum: [Receiving, Picking, Packing, Shipping, Inventory, Safety, Talent Management] }
+        contentGroup: { type: string, maxLength: 120 }
         audience: { type: string, enum: [Employees, Managers, Both] }
         owner: { type: string }
         version: { type: string }

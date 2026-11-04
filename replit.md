@@ -39,6 +39,8 @@ An internal hub that complements, rather than replaces, the existing LMS. Employ
 - Warehouse employees use phones on the floor. Aim for resources reachable within two taps of home.
 - Managers keep completed assessments and meeting files on their own computers; the portal hosts only blank master copies.
 - Archived resources are hidden, never deleted.
+- Managers need additional areas such as Talent Management. Talent Management resources are manager-only.
+- Content groups classify resources by substance separately from area and audience: Inbound, Putaway and Storage, Orders and Transfers, Distribution Outbound, Inventory Accuracy, and System How-Tos and References. Editors may also enter additional group names.
 
 ## Gotchas
 

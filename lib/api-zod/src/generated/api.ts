@@ -63,6 +63,8 @@ export const SignOutResponse = zod.object({
 
 
 
+export const listResourcesResponseOneContentGroupMax = 120;
+
 
 
 
@@ -71,7 +73,8 @@ export const ListResourcesResponseItem = zod.object({
   "kind": zod.enum(['sop', 'learning', 'toolkit']),
   "title": zod.string().min(1),
   "description": zod.string(),
-  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety']),
+  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety', 'Talent Management']),
+  "contentGroup": zod.string().max(listResourcesResponseOneContentGroupMax).optional(),
   "audience": zod.enum(['Employees', 'Managers', 'Both']),
   "owner": zod.string().optional(),
   "version": zod.string().optional(),
@@ -92,6 +95,8 @@ export const ListResourcesResponse = zod.array(ListResourcesResponseItem)
 
 
 
+export const saveResourceBodyContentGroupMax = 120;
+
 
 
 
@@ -100,7 +105,8 @@ export const SaveResourceBody = zod.object({
   "kind": zod.enum(['sop', 'learning', 'toolkit']),
   "title": zod.string().min(1),
   "description": zod.string(),
-  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety']),
+  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety', 'Talent Management']),
+  "contentGroup": zod.string().max(saveResourceBodyContentGroupMax).optional(),
   "audience": zod.enum(['Employees', 'Managers', 'Both']),
   "owner": zod.string().optional(),
   "version": zod.string().optional(),
@@ -115,6 +121,8 @@ export const SaveResourceBody = zod.object({
 })
 
 
+export const saveResourceResponseOneContentGroupMax = 120;
+
 
 
 
@@ -123,7 +131,8 @@ export const SaveResourceResponse = zod.object({
   "kind": zod.enum(['sop', 'learning', 'toolkit']),
   "title": zod.string().min(1),
   "description": zod.string(),
-  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety']),
+  "area": zod.enum(['Receiving', 'Picking', 'Packing', 'Shipping', 'Inventory', 'Safety', 'Talent Management']),
+  "contentGroup": zod.string().max(saveResourceResponseOneContentGroupMax).optional(),
   "audience": zod.enum(['Employees', 'Managers', 'Both']),
   "owner": zod.string().optional(),
   "version": zod.string().optional(),

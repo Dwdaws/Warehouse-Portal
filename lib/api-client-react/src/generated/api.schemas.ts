@@ -54,6 +54,7 @@ export const ResourceInputArea = {
   Shipping: 'Shipping',
   Inventory: 'Inventory',
   Safety: 'Safety',
+  Talent_Management: 'Talent Management',
 } as const;
 
 export type ResourceInputAudience = typeof ResourceInputAudience[keyof typeof ResourceInputAudience];
@@ -72,6 +73,8 @@ export interface ResourceInput {
   title: string;
   description: string;
   area: ResourceInputArea;
+  /** @maxLength 120 */
+  contentGroup?: string;
   audience: ResourceInputAudience;
   owner?: string;
   version?: string;

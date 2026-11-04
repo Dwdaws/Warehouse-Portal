@@ -15,6 +15,8 @@ export interface ResourceInput {
   title: string;
   description: string;
   area: ResourceInputArea;
+  /** @maxLength 120 */
+  contentGroup?: string;
   audience: ResourceInputAudience;
   owner?: string;
   version?: string;

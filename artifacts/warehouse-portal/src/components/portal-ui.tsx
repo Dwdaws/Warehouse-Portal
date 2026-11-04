@@ -42,6 +42,7 @@ export function ResourceRow({ r, showStale, index = 0 }: { r: Resource; showStal
         <div className="truncate font-semibold leading-tight">{r.title}</div>
         <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <AreaTag area={r.area} />
+          {r.contentGroup && <span>{r.contentGroup}</span>}
           <span className="font-mono uppercase">{KIND_LABEL[r.kind]}</span>
           {r.version && <span className="font-mono">v{r.version}</span>}
           {r.minutes ? <span className="font-mono">{r.minutes} min</span> : null}

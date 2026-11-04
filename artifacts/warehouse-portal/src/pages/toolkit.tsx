@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Download, FileSpreadsheet, FileText } from "lucide-react";
 import { useListResources, getListResourcesQueryKey, type Resource } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { EmptyPanel, ErrorPanel, ListSkeleton, PageHead, Restricted } from "@/components/portal-ui";
-import { fmtDate, isManager, visibleResources } from "@/lib/portal";
+import { fmtDate, groupName, isManager, visibleResources } from "@/lib/portal";
+import { GroupFilter } from "@/components/group-filter";
+import { AreaFilter } from "@/pages/sops";
 
 function ToolCard({ r, i }: { r: Resource; i: number }) {
   const xl = /\.xlsx?$/i.test(r.fileName ?? r.fileUrl ?? "");
@@ -18,6 +20,7 @@ function ToolCard({ r, i }: { r: Resource; i: number }) {
         </div>
       </div>
       <p className="mt-3 flex-1 text-sm text-muted-foreground">{r.description}</p>
+      {r.contentGroup && <div className="mt-2 text-xs font-semibold text-muted-foreground">{r.contentGroup}</div>}
       {r.fileUrl ? (
         <a href={r.fileUrl} download={r.fileName} className="mt-4 inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-transform active:scale-[0.98]" data-testid={`button-download-${r.id}`}>
           <Download className="h-4 w-4" /> Download blank
@@ -29,17 +32,22 @@ function ToolCard({ r, i }: { r: Resource; i: number }) {
 
 export default function ToolkitPage() {
   const { user } = useSessionUser();
+  const [group, setGroup] = useState("All");
+  const [area, setArea] = useState("All");
   const list = useListResources({ query: { queryKey: getListResourcesQueryKey(), refetchOnMount: true } });
   const items = useMemo(() => visibleResources(list.data, user).filter((r) => r.kind === "toolkit"), [list.data, user]);
+  const filtered = items.filter(r => (group === "All" || groupName(r) === group) && (area === "All" || r.area === area));
   if (!isManager(user)) return <Restricted need="manager" />;
   const isAssess = (r: Resource) => /assess|30-60-90/i.test(`${r.category} ${r.title}`);
   const groups = [
-    { title: "Meeting Templates", sub: "1-on-1 and team meetings · Word", items: items.filter((r) => !isAssess(r)) },
-    { title: "30-60-90 Assessments", sub: "New-hire check-ins · Excel", items: items.filter(isAssess) },
+    { title: "Meeting Templates", sub: "1-on-1 and team meetings · Word", items: filtered.filter((r) => !isAssess(r)) },
+    { title: "30-60-90 Assessments", sub: "New-hire check-ins · Excel", items: filtered.filter(isAssess) },
   ];
   return (
     <div>
       <PageHead kicker="Managers only" title="Manager Toolkit">Blank master copies. Save completed files on your own computer; the portal only keeps the current template.</PageHead>
+      <AreaFilter value={area} onChange={setArea} />
+      <GroupFilter resources={items} value={group} onChange={setGroup} />
       {list.isLoading ? <ListSkeleton /> : list.isError ? <ErrorPanel onRetry={() => list.refetch()} /> : groups.map((g) => (
         <section key={g.title} className="mb-8">
           <h2 className="font-display text-2xl font-bold uppercase">{g.title}</h2>

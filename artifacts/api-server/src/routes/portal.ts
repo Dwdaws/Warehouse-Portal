@@ -29,7 +29,7 @@ async function requireRole(req: Request, res: Response, role: "user" | "manager"
 }
 function canView(user: User, data: Record<string, unknown>) {
   if (data.archived && !user.editor) return false;
-  if (user.role === "Employee" && (data.kind === "toolkit" || data.audience === "Managers")) return false;
+  if (user.role === "Employee" && (data.kind === "toolkit" || data.audience === "Managers" || data.area === "Talent Management")) return false;
   return true;
 }
 async function sessionPayload(user?: User) {
@@ -79,8 +79,8 @@ router.post("/portal/resources", async (req,res):Promise<void> => {
   const [existing] = await db.select().from(portalResources).where(eq(portalResources.id,id));
   if (input.id && !existing) {res.status(404).json({error:"Resource not found."});return;}
   const now = new Date().toISOString();
-  const data = {...existing?.data,...input,id,createdAt:existing?.data.createdAt ?? now,updatedAt:now};
-  if (input.kind === "toolkit") data.audience = "Managers";
+  const data = {...existing?.data,...input,id,contentGroup:input.contentGroup?.trim() ?? existing?.data.contentGroup ?? "",createdAt:existing?.data.createdAt ?? now,updatedAt:now};
+  if (input.kind === "toolkit" || input.area === "Talent Management") data.audience = "Managers";
   await db.insert(portalResources).values({id,data}).onConflictDoUpdate({target:portalResources.id,set:{data}});
   res.json(SaveResourceResponse.parse(data));
 });

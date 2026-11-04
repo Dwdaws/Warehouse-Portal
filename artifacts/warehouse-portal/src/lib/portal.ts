@@ -2,6 +2,15 @@ import type { Resource, User } from "@workspace/api-client-react";
 
 export const AREAS = ["Receiving", "Picking", "Packing", "Shipping", "Inventory", "Safety"] as const;
 export type Area = (typeof AREAS)[number];
+export const MANAGER_AREAS = ["Talent Management"] as const;
+export const ALL_AREAS = [...AREAS, ...MANAGER_AREAS] as const;
+export const CONTENT_GROUPS = [
+  "Inbound", "Putaway and Storage", "Orders and Transfers", "Distribution Outbound",
+  "Inventory Accuracy", "System How-Tos and References",
+] as const;
+export const groupName = (r: Resource) => r.contentGroup || "Ungrouped";
+export const contentGroups = (resources: Resource[]) =>
+  [...new Set([...CONTENT_GROUPS, ...resources.map(groupName)])].sort((a, b) => a.localeCompare(b));
 
 /* Floor-tape colors: each area gets the color it would be marked with on the warehouse floor. */
 export const AREA_STYLE: Record<string, { hue: string; code: string; note: string }> = {
@@ -11,6 +20,7 @@ export const AREA_STYLE: Record<string, { hue: string; code: string; note: strin
   Shipping: { hue: "265 35% 45%", code: "SHP", note: "Manifests, carriers, LTL" },
   Inventory: { hue: "188 60% 32%", code: "INV", note: "Cycle counts, adjustments" },
   Safety: { hue: "4 72% 48%", code: "SAF", note: "PPE, forklifts, incidents" },
+  "Talent Management": { hue: "325 48% 40%", code: "TLM", note: "Coaching, development, and performance" },
 };
 
 export const areaColor = (area: string, alpha = 1) =>
@@ -18,11 +28,13 @@ export const areaColor = (area: string, alpha = 1) =>
 
 export const isManager = (u?: User | null) => u?.role === "Manager";
 export const isEditor = (u?: User | null) => !!u && u.role === "Manager" && u.editor;
+export const areasForUser = (u?: User | null) => isManager(u) ? ALL_AREAS : AREAS;
 
 /** Frontend mirror of role visibility. Archived items only show in admin. */
 export function canSee(r: Resource, user?: User | null, includeArchived = false) {
   if (!user) return false;
   if (r.archived && !includeArchived) return false;
+  if ((MANAGER_AREAS as readonly string[]).includes(r.area) && !isManager(user)) return false;
   if (r.kind === "toolkit") return isManager(user);
   if (r.audience === "Managers") return isManager(user);
   return true;
@@ -59,7 +71,7 @@ export const resourceHref = (r: Resource) =>
 export function matches(r: Resource, q: string) {
   const s = q.trim().toLowerCase();
   if (!s) return true;
-  return [r.title, r.description, r.area, r.owner, r.category, r.fileName]
+  return [r.title, r.description, r.area, r.contentGroup, r.owner, r.category, r.fileName]
     .filter(Boolean)
     .some((f) => String(f).toLowerCase().includes(s));
 }

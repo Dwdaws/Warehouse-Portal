@@ -1,17 +1,21 @@
 import { useMemo, useState } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { Search, X } from "lucide-react";
 import { useListResources, getListResourcesQueryKey } from "@workspace/api-client-react";
 import { useSessionUser } from "@/components/shell";
 import { ErrorPanel, ListSkeleton, ResourceRow, EmptyPanel } from "@/components/portal-ui";
-import { AREAS, AREA_STYLE, areaColor, matches, visibleResources } from "@/lib/portal";
+import { areasForUser, AREA_STYLE, areaColor, groupName, matches, visibleResources } from "@/lib/portal";
+import { GroupFilter } from "@/components/group-filter";
 
 export default function HomePage() {
   const { user } = useSessionUser();
   const [q, setQ] = useState("");
+  const [group, setGroup] = useState("All");
+  const search = useSearch();
+  const area = new URLSearchParams(search).get("area") || "All";
   const list = useListResources({ query: { queryKey: getListResourcesQueryKey(), refetchOnMount: true, refetchOnWindowFocus: true } });
   const visible = useMemo(() => visibleResources(list.data, user), [list.data, user]);
-  const results = useMemo(() => visible.filter((r) => matches(r, q)), [visible, q]);
+  const results = useMemo(() => visible.filter((r) => matches(r, q) && (group === "All" || groupName(r) === group) && (area === "All" || r.area === area)), [visible, q, group, area]);
   const recent = useMemo(() => [...visible].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 6), [visible]);
   const first = user?.name.split(" ")[0];
 
@@ -36,8 +40,13 @@ export default function HomePage() {
         </label>
       </section>
 
-      {q ? (
+      <GroupFilter resources={visible} value={group} onChange={setGroup} />
+      {q || group !== "All" || area !== "All" ? (
         <section>
+          <div className="mb-3 flex flex-wrap items-center gap-3 text-sm">
+            <span>{area !== "All" ? area : group !== "All" ? group : "Search results"}</span>
+            <Link href="/" onClick={() => {setQ("");setGroup("All");}} className="underline">Clear filters</Link>
+          </div>
           <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{results.length} match{results.length === 1 ? "" : "es"}</div>
           {results.length ? (
             <div className="overflow-hidden rounded-lg border border-border">{results.map((r, i) => <ResourceRow key={r.id} r={r} index={i} />)}</div>
@@ -50,12 +59,12 @@ export default function HomePage() {
           <section className="mb-8">
             <h2 className="mb-3 font-display text-xl font-bold uppercase tracking-wide">Jump to an area</h2>
             <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
-              {AREAS.map((a, i) => {
-                const count = visible.filter((r) => r.area === a && r.kind !== "toolkit").length;
+              {areasForUser(user).map((a, i) => {
+                const count = visible.filter((r) => r.area === a).length;
                 return (
                   <Link
                     key={a}
-                    href={`/sops?area=${a}`}
+                    href={`/?area=${encodeURIComponent(a)}`}
                     data-testid={`link-area-${a.toLowerCase()}`}
                     className="rise group relative overflow-hidden rounded-lg border border-border bg-card p-3.5 transition-transform active:scale-[0.98] md:hover:-translate-y-0.5"
                     style={{ animationDelay: `${i * 50}ms` }}
