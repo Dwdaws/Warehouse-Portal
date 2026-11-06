@@ -37,7 +37,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 ## User preferences
 
 - This is a proof of concept that the user's IT team will rebuild from scratch. Prioritize clear, realistic workflows and simple, readable code over production-grade security or scale.
-- Keep relevant product choices and their rationale documented as the prototype evolves for an eventual IT handoff. Do not produce the handoff deliverable yet; it should guide IT's rebuild rather than imply they must retain this prototype's technology.
+- Keep relevant product choices and their rationale documented as the prototype evolves for the IT handoff. The user has now requested the handover; maintain `docs/warehouse-portal-it-handover.md` as its editable source. It should guide IT's rebuild rather than imply they must retain this prototype's technology.
 - Authentication is intentionally simulated: a picker for four fixed demo profiles, no passwords, and supervisor/manager-assisted employee device registration. Registered employees outside the demo profiles still need their device code.
 - Demo personas cover the hierarchy: Alex Morgan is Manager/Content Editor, Jordan Lee is Lead, Taylor Brooks is Supervisor, and Sam Rivera is Frontline Employee. These fixed demo access assignments reset on server startup; registered employee assignments do not. Jordan must not see Talent Management or management tools.
 - Warehouse employees use phones on the floor. Aim for resources reachable within two taps of home.
@@ -52,7 +52,7 @@ E-learning viewing records identify the signed-in person and browser, with first
 - Supervisors and managers need additional areas such as Talent Management. Frontline employees and leads do not have access to Talent Management or other management-only content.
 - Content groups classify resources by substance separately from area and audience: Inbound, Putaway and Storage, Orders and Transfers, Distribution Outbound, Inventory Accuracy, and System How-Tos and References. Editors may also enter additional group names.
 - Viewing records count e-learning page opens, not viewing progress, attention, or completion. The existing LMS remains the completion source of truth.
-- The user expects MeetQuinn to email them when an employee finishes a module; the portal's page-open report is sufficient alongside those completion notifications. Email delivery has not been verified here.
+- Agreed completion workflow: MeetQuinn emails the portal owner when an employee completes training; the portal owner forwards that notification to the employee's manager. This is manual, outside the portal, and separate from page-open tracking. Email delivery has not been verified here.
 - Browser identifiers are not hardware fingerprints: shared phones follow the signed-in employee, and clearing cookies creates a new browser identity.
 - Keep the existing embedded PDF viewer. The user chose to retain it despite Chrome blocking it in some embedded previews; Full screen and Download remain alternatives.
 

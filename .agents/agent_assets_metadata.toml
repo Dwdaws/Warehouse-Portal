@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "W8g56hMkrt_qKZ9FozUR8"
+uri = "file://generated-artifacts/it-handover/warehouse-portal-it-handover.pdf"
+type = "pdf"
+title = "Warehouse Portal — IT Handover"
+description = "13-page PDF covering requirements, component connections, MeetQuinn embeds and completion-email workflow, permissions, UI, design, and rebuild acceptance checks."
+logical_id = "eec21968-9529-4471-aef6-01256c2c1789"
+content_hash = "sha256:a9c1003e0e9471b4d57a1296d738395f060912f0ec540980bbfc683a57560571"
+size = 457774
+mtime_ms = 1793973219685
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:6f224c7d-2d20-41c3-90c5-84f8fd620ee4/eec21968-9529-4471-aef6-01256c2c1789/763b23ac-1752-4646-976d-08d91315feda"
+storage_version_token = "1793973281174766"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "HBxqRXsd6tp89qFdjYuOe"
+uri = "file://generated-artifacts/it-handover/warehouse-portal-it-handover.docx"
+type = "word_document"
+title = "IT Handover — Editable Word Document"
+description = "Editable version of the full specification for IT review, annotations, and rebuild scoping."
+logical_id = "3cfa1ffa-35da-4ef3-91cd-aa86ddc6bc94"
+content_hash = "sha256:316fbb386bdc951ffcf9bddd527064514d57d8030c3ab466909305f6d3187a09"
+size = 14781
+mtime_ms = 1793973187949
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:6f224c7d-2d20-41c3-90c5-84f8fd620ee4/3cfa1ffa-35da-4ef3-91cd-aa86ddc6bc94/d740b8ea-e5ce-4beb-b1e2-fc640ccd5a6c"
+storage_version_token = "1793973281742655"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
